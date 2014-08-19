@@ -1,9 +1,24 @@
 package handlers
 
 import (
+	"encoding/json"
 	"html/template"
 	"net/http"
 )
+
+type Response map[string]interface{}
+
+func (r Response) String() (s string) {
+	b, err := json.Marshal(r)
+	if err != nil {
+		s = ""
+		return
+	}
+	s = string(b)
+	return
+}
+
+// =====  This is just some legavy stuff using html templates ===== //
 
 type Item struct {
 	Title string
