@@ -2,18 +2,10 @@ package models
 
 import (
 	"database/sql"
-	"fmt"
-	_ "github.com/lib/pq"
+	// this project
+	"github.com/itchy/go-ng-todo/database"
 )
 
-// TODO Need to make this long living!
-// @db ||= sql.Open(...)
-
-func Connect() *sql.DB {
-	db, err := sql.Open("postgres", "user=scott dbname=todo sslmode=disable")
-	if err != nil {
-		panic(fmt.Sprintf("%v", err))
-	}
-
-	return db
+func DB() *sql.DB {
+	return database.DB()
 }

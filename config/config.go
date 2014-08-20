@@ -12,11 +12,14 @@ package config
 
 import (
 	"github.com/codegangsta/negroni"
+	// this project
+	"github.com/itchy/go-ng-todo/database"
 )
 
 func Run(configs map[string]string) {
 	router := Router()
-
+	database.Connect()
+	defer database.Close()
 	// config negroni
 	n := negroni.Classic()
 	n.UseHandler(router)
