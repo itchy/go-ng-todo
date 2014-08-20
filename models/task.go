@@ -24,7 +24,7 @@ func done(i int) bool {
 
 func Tasks() []Task {
 	db := DB()
-	stmt, err := db.Prepare("SELECT id, state, body, created_at, updated_at FROM tasks")
+	stmt, err := db.Prepare("SELECT id, state, body, created_at, updated_at FROM tasks ORDER BY created_at")
 	if err != nil {
 		panic(fmt.Sprintf("%v", err))
 	}
@@ -122,11 +122,49 @@ func CreateTask(input io.Reader) Task {
 	}
 
 	// get database details
-	rowCnt, err := res.RowsAffected()
+	// rowCnt, err := res.RowsAffected()
+	// if err != nil {
+	// 	panic(fmt.Sprintf("%v", err))
+	// }
+	// fmt.Printf("ID = %d, affected = %d\n", lastId, rowCnt)
+
+	// return the created task
+	return Task{ID: lastId, Done: false, Body: body}
+}
+
+func UpdateTask(id string, input io.Reader) error {
+	type jsonFmt struct {
+		Task map[string]int
+	}
+
+	//get content of JSON element
+	decoder := json.NewDecoder(input)
+	var task jsonFmt
+	err := decoder.Decode(&task)
+	if err != nil {
+		panic("Unable to decode: " + err.Error())
+	}
+	state := task.Task["state"]
+
+	// ADD to database
+	db := DB()
+	stmt, err := db.Prepare("UPDATE tasks SET state = $1, updated_at = $2 WHERE id = $3")
 	if err != nil {
 		panic(fmt.Sprintf("%v", err))
 	}
-	fmt.Printf("ID = %d, affected = %d\n", lastId, rowCnt)
+
+	_, err = stmt.Exec(state, time.Now(), id)
+	if err != nil {
+		panic(fmt.Sprintf("%v", err))
+	}
+
+	// get database details
+	// rowCnt, err := res.RowsAffected()
+	// if err != nil {
+	// 	panic(fmt.Sprintf("%v", err))
+	// }
+	// fmt.Printf("ID = %d, affected = %d\n", lastId, rowCnt)
+
 	// return the created task
-	return Task{ID: lastId, Done: false, Body: body}
+	return err
 }

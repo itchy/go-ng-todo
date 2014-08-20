@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
 	// this project
 	"github.com/itchy/go-ng-todo/models"
 )
@@ -33,7 +34,13 @@ func CreateTaskHandler(w http.ResponseWriter, req *http.Request, params map[stri
 
 func UpdateTaskHandler(w http.ResponseWriter, req *http.Request, params map[string]string) {
 	fmt.Println("\n\nUpdateTaskHandler\n\n")
-	task_id := string(params["id"][0]) // just grabbing first element before .json need a better way to do this
+	task_id := string(strings.Split(params["id"], ".")[0]) // strip off .json
+	fmt.Println(task_id)
+
+	err := models.UpdateTask(task_id, req.Body)
+	if err != nil {
+		panic("Unable to update task: " + err.Error())
+	}
 
 	task := models.FindTask(task_id)
 	b, _ := json.Marshal(task)
