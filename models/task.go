@@ -115,6 +115,7 @@ func CreateTask(input io.Reader) Task {
 	if err != nil {
 		panic(fmt.Sprintf("%v", err))
 	}
+	defer stmt.Close()
 
 	err = stmt.QueryRow(body, 0, time.Now(), time.Now()).Scan(&lastId)
 	if err != nil {
