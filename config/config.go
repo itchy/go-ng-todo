@@ -20,8 +20,12 @@ func Run(configs map[string]string) {
 	router := Router()
 	database.Connect()
 	defer database.Close()
+	// logger
+	logger := Logger(configs["logFile"])
+
 	// config negroni
 	n := negroni.Classic()
 	n.UseHandler(router)
+	n.Use(logger)
 	n.Run(":" + configs["port"])
 }

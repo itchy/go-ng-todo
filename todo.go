@@ -7,8 +7,9 @@ import (
 
 func main() {
 	configutation := map[string]string{
-		"port": "3000",
-		"data": "/var/todo/data"}
+		"port":    "3000",
+		"logFile": "production",
+		"data":    "/var/todo/data"}
 
 	config.Run(configutation)
 }
