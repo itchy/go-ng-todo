@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"html/template"
 	"net/http"
+	// this project
+	"github.com/itchy/go-ng-todo/utils"
 )
 
 type Response map[string]interface{}
@@ -15,6 +17,11 @@ func (r Response) String() (s string) {
 		return
 	}
 	s = string(b)
+	return
+}
+
+func log(level string, content string) {
+	utils.Logger().Printf("[%s]: %s\n", level, content)
 	return
 }
 

@@ -14,6 +14,7 @@ import (
 	"github.com/codegangsta/negroni"
 	// this project
 	"github.com/itchy/go-ng-todo/database"
+	"github.com/itchy/go-ng-todo/utils"
 )
 
 func Run(configs map[string]string) {
@@ -21,11 +22,11 @@ func Run(configs map[string]string) {
 	database.Connect()
 	defer database.Close()
 	// logger
-	logger := Logger(configs["logFile"])
+	utils.SetLogger(configs["logFile"])
 
 	// config negroni
 	n := negroni.Classic()
 	n.UseHandler(router)
-	n.Use(logger)
+	n.Use(utils.Logger())
 	n.Run(":" + configs["port"])
 }

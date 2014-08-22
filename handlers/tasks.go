@@ -10,6 +10,7 @@ import (
 )
 
 func TasksHandler(w http.ResponseWriter, req *http.Request, params map[string]string) {
+	log("INFO", "Processing tasks handler")
 	// GET data
 	tasks := models.Tasks()
 	b, _ := json.Marshal(tasks)
@@ -44,12 +45,6 @@ func UpdateTaskHandler(w http.ResponseWriter, req *http.Request, params map[stri
 
 	task := models.FindTask(task_id)
 	b, _ := json.Marshal(task)
-
-	fmt.Println("Query String")
-	fmt.Println(req.URL.RawQuery)
-	fmt.Println("Element JSON")
-	fmt.Println(string(b))
-	fmt.Println("")
 
 	w.Header().Set("Content-Type", "application/json")
 	fmt.Fprint(w, string(b))
